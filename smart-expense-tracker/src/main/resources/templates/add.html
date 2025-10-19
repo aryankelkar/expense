@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #2563eb;
+            --primary-blue-hover: #1d4ed8;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-light: #9ca3af;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --radius-lg: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #dbeafe 0%, #f0f9ff 50%, #ffffff 100%);
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 24px;
+            transition: all 0.2s ease;
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            background: var(--bg-primary);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .back-link:hover {
+            color: var(--primary-blue-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .form-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-group select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 48px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-blue-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+            border-color: var(--text-secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .validation-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-card {
+                padding: 24px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="/" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+
+        <div class="header">
+            <h1>Add New Expense</h1>
+            <p>Track your spending with ease</p>
+        </div>
+
+        <div class="form-card">
+            <form th:action="@{/add}" th:object="${expense}" method="post" id="expenseForm">
+                <div class="form-group">
+                    <label for="title">Expense Title *</label>
+                    <input type="text" 
+                           th:field="*{title}" 
+                           id="title"
+                           placeholder="e.g., Grocery Shopping, Gas Bill"
+                           required
+                           minlength="3"
+                           maxlength="100">
+                    <div class="validation-message">
+                        Please enter a valid title (3-100 characters)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <select th:field="*{category}" 
+                            id="category"
+                            required>
+                        <option value="">Select a category...</option>
+                        <option value=" Food & Dining"> Food & Dining</option>
+                        <option value=" Transportation">Transportation</option>
+                        <option value=" Shopping"> Shopping</option>
+                        <option value=" Housing"> Housing</option>
+                        <option value=" Healthcare"> Healthcare</option>
+                        <option value=" Entertainment"> Entertainment</option>
+                        <option value=" Education"> Education</option>
+                        <option value=" Utilities"> Utilities</option>
+                        <option value=" Travel"> Travel</option>
+                        <option value=" Other"> Other</option>
+                    </select>
+                    <div class="validation-message">
+                        Please select a category
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Amount (₹) *</label>
+                    <input type="number" 
+                           th:field="*{amount}" 
+                           id="amount"
+                           step="0.01"
+                           min="0.01"
+                           max="999999.99"
+                           placeholder="0.00"
+                           required>
+                    <div class="validation-message">
+                        Please enter a valid amount (₹0.01 - ₹999,999.99)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Date *</label>
+                    <input type="date" 
+                           th:field="*{date}" 
+                           id="date"
+                           required>
+                    <div class="validation-message">
+                        Please select a date
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Expense
+                    </button>
+                    <a href="/" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('expenseForm');
+            const titleInput = document.getElementById('title');
+            const categorySelect = document.getElementById('category');
+            const amountInput = document.getElementById('amount');
+            const dateInput = document.getElementById('date');
+
+            // Set default date to today
+            dateInput.value = new Date().toISOString().split('T')[0];
+
+            // Real-time validation
+            titleInput.addEventListener('input', function() {
+                validateField(this, this.value.length >= 3 && this.value.length <= 100);
+            });
+
+            categorySelect.addEventListener('change', function() {
+                validateField(this, this.value !== '');
+            });
+
+            amountInput.addEventListener('input', function() {
+                const value = parseFloat(this.value);
+                validateField(this, value > 0 && value <= 999999.99);
+            });
+
+            dateInput.addEventListener('change', function() {
+                validateField(this, this.value !== '');
+            });
+
+            function validateField(field, isValid) {
+                if (isValid) {
+                    field.style.borderColor = '#10b981';
+                } else {
+                    field.style.borderColor = '#ef4444';
+                }
+            }
+
+            // Form submission with confirmation
+            form.addEventListener('submit', function(e) {
+                const title = titleInput.value.trim();
+                const category = categorySelect.value;
+                const amount = parseFloat(amountInput.value);
+                const date = dateInput.value;
+
+                if (!title || !category || !amount || amount <= 0 || !date) {
+                    e.preventDefault();
+                    alert('Please fill in all fields correctly.');
+                    return;
+                }
+
+                const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+                const categoryDisplay = selectedOption.text;
+                const formattedDate = new Date(date).toLocaleDateString();
+
+                if (!confirm(`Add expense: ${title} - ${categoryDisplay} - ₹${amount.toFixed(2)} on ${formattedDate}?`)) {
+                    e.preventDefault();
+                }
+            });
+
+            // Auto-format amount input
+            amountInput.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(2);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
