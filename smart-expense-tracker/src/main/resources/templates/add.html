@@ -189,6 +189,60 @@
             font-size: 0.875rem;
             margin-top: 8px;
             font-weight: 500;
+            display: none;
+        }
+
+        .validation-message.show {
+            display: block;
+        }
+
+        /* Enhanced form styling */
+        .form-group input::placeholder {
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus::placeholder {
+            opacity: 0.5;
+            transform: translateY(-1px);
+        }
+
+        /* Amount field styling */
+        .amount-field {
+            position: relative;
+        }
+
+        .currency-indicator {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-weight: 600;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .amount-field input {
+            padding-left: 40px;
+        }
+
+        /* Remove number input spinners */
+        .amount-field input[type="number"]::-webkit-outer-spin-button,
+        .amount-field input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .amount-field input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        /* Smooth focus animations */
+        .form-group input:focus,
+        .form-group select:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1), 0 4px 12px rgba(37, 99, 235, 0.15);
         }
 
 
@@ -237,7 +291,8 @@
                            placeholder="e.g., Grocery Shopping, Gas Bill"
                            required
                            minlength="3"
-                           maxlength="100">
+                           maxlength="100"
+                           autofocus>
                     <div class="validation-message">
                         Please enter a valid title (3-100 characters)
                     </div>
@@ -266,15 +321,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="amount">Amount (₹) *</label>
-                    <input type="number" 
-                           th:field="*{amount}" 
-                           id="amount"
-                           step="0.01"
-                           min="0.01"
-                           max="999999.99"
-                           placeholder="0.00"
-                           required>
+                    <label for="amount">Amount *</label>
+                    <div class="amount-field">
+                        <span class="currency-indicator">₹</span>
+                        <input type="number" 
+                               name="amount"
+                               id="amount"
+                               step="0.01"
+                               min="0.01"
+                               max="999999.99"
+                               placeholder="0.00"
+                               required>
+                    </div>
                     <div class="validation-message">
                         Please enter a valid amount (₹0.01 - ₹999,999.99)
                     </div>
@@ -333,10 +391,16 @@
             });
 
             function validateField(field, isValid) {
+                const validationMessage = field.parentElement.querySelector('.validation-message');
+                
                 if (isValid) {
                     field.style.borderColor = '#10b981';
+                    field.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)';
+                    validationMessage.classList.remove('show');
                 } else {
                     field.style.borderColor = '#ef4444';
+                    field.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.1)';
+                    validationMessage.classList.add('show');
                 }
             }
 
@@ -347,9 +411,21 @@
                 const amount = parseFloat(amountInput.value);
                 const date = dateInput.value;
 
-                if (!title || !category || !amount || amount <= 0 || !date) {
+                // Validate all fields
+                const isTitleValid = title.length >= 3 && title.length <= 100;
+                const isCategoryValid = category !== '';
+                const isAmountValid = amount > 0 && amount <= 999999.99;
+                const isDateValid = date !== '';
+
+                if (!isTitleValid || !isCategoryValid || !isAmountValid || !isDateValid) {
                     e.preventDefault();
-                    alert('Please fill in all fields correctly.');
+                    
+                    // Show validation messages for invalid fields
+                    validateField(titleInput, isTitleValid);
+                    validateField(categorySelect, isCategoryValid);
+                    validateField(amountInput, isAmountValid);
+                    validateField(dateInput, isDateValid);
+                    
                     return;
                 }
 
