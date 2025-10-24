@@ -127,11 +127,20 @@
 
         .form-group select {
             cursor: pointer;
+            /* Hide native arrow to prevent double chevrons */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 12px center;
+            background-position: right 14px center;
             background-repeat: no-repeat;
             background-size: 16px;
             padding-right: 48px;
+        }
+
+        /* Legacy Edge/IE: hide default arrow */
+        select::-ms-expand {
+            display: none;
         }
 
         .form-actions {
@@ -302,18 +311,35 @@
                     <label for="category">Category *</label>
                     <select th:field="*{category}" 
                             id="category"
-                            required>
-                        <option value="">Select a category...</option>
-                        <option value=" Food & Dining"> Food & Dining</option>
-                        <option value=" Transportation">Transportation</option>
-                        <option value=" Shopping"> Shopping</option>
-                        <option value=" Housing"> Housing</option>
-                        <option value=" Healthcare"> Healthcare</option>
-                        <option value=" Entertainment"> Entertainment</option>
-                        <option value=" Education"> Education</option>
-                        <option value=" Utilities"> Utilities</option>
-                        <option value=" Travel"> Travel</option>
-                        <option value=" Other"> Other</option>
+                            required aria-label="Expense category">
+                        <option value="" disabled selected hidden>Choose a category…</option>
+                        <optgroup label="Food & Personal">
+                            <option value="Food & Dining">Food & Dining</option>
+                            <option value="Groceries">Groceries</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Health & Fitness">Health & Fitness</option>
+                        </optgroup>
+                        <optgroup label="Transport">
+                            <option value="Transportation">Transportation</option>
+                            <option value="Fuel">Fuel</option>
+                            <option value="Taxi & Ride Hailing">Taxi & Ride Hailing</option>
+                            <option value="Public Transit">Public Transit</option>
+                        </optgroup>
+                        <optgroup label="Home & Bills">
+                            <option value="Housing">Housing</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Internet & Mobile">Internet & Mobile</option>
+                        </optgroup>
+                        <optgroup label="Lifestyle">
+                            <option value="Shopping">Shopping</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Education">Education</option>
+                        </optgroup>
+                        <optgroup label="Other">
+                            <option value="Gifts & Donations">Gifts & Donations</option>
+                            <option value="Other">Other</option>
+                        </optgroup>
                     </select>
                     <div class="validation-message">
                         Please select a category

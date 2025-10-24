@@ -314,7 +314,7 @@
             <table th:unless="${#lists.isEmpty(expenses)}" class="expenses-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>No.</th>
                         <th>Title</th>
                         <th>Category</th>
                         <th>Date</th>
@@ -323,8 +323,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="exp : ${expenses}">
-                        <td th:text="${exp.id}"></td>
+                    <tr th:each="exp, stat : ${expenses}">
+                        <td th:text="${stat.count}"></td>
                         <td th:text="${exp.title}"></td>
                         <td>
                             <span class="category-badge" th:text="${exp.category}"></span>
